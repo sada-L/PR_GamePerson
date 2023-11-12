@@ -50,7 +50,7 @@ public class Person
         $"Здоровье: {_health}/{_healthMax}\n" +
         $"Лагерь: {_camp}\n" +
         $"Урон: {_damage}\n" +
-        $"Победы: {_wins}\n" +
+        $"Очки побед: {_wins}\n" +
         $"--------------------"); 
     }
     //Перемещение
@@ -145,7 +145,7 @@ public class Person
            }
            //проверка жив ли гг 
            if (_life == false)
-           { Console.WriteLine("Вы умерли"); return; }
+           { Console.WriteLine("\n------------| Вы умерли |------------\n"); return; }
            Console.WriteLine("\nВы смогли отбросить врага и нашли момент восстановить силы.");
            //проверка ОЗ
            Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: \n" + "-------------------------------");
@@ -176,7 +176,11 @@ public class Person
                Vost();
            //проверка кто победил 
            if (persFildEnem.Count(person => person._life == true) == 0)
-           { Console.WriteLine("Побида!!!"); return; }
+           {
+               Console.WriteLine("Побида!!!");
+               _wins += 1;
+               return;
+           }
            Console.WriteLine("Битва продолжается...");
         }
     }
@@ -222,6 +226,7 @@ public class Person
         {
             _health = _healthMax;
             _wins -= 5;
+            Console.WriteLine("Вы полностью восстановили ОЗ");
         }
         else Console.WriteLine("Победи в 5 битвах, чтобы восстановить ОЗ");
     }

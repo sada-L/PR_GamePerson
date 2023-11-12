@@ -77,15 +77,7 @@ public class AccChose
         Person n = new Person("Enem", 100, 0, 5, false, 40,0, false);
         Person v = new Person("Enem", 100, 0, 5, false, 40,0, true);
         Person p = new Person("Enem", 100, 0, 5, false, 40,0, true);
-        _acc.Add(a);
-        _acc.Add(b);
-        _acc.Add(c);
-        _acc.Add(s);
-        _acc.Add(t);
-        _acc.Add(j);
-        _acc.Add(n);
-        _acc.Add(v);
-        _acc.Add(p);
+        _acc.Add(a); _acc.Add(b); _acc.Add(c); _acc.Add(s); _acc.Add(t); _acc.Add(j); _acc.Add(n); _acc.Add(v); _acc.Add(p);
         Console.WriteLine("Персонаж добавлен");
     }
 }
