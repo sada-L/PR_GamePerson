@@ -3,10 +3,7 @@
 public class AccChose
 {
     private List<Person> _acc = new List<Person>();
-    public List<Person> Acc
-    {
-        get { return _acc; }
-    }
+    public List<Person> Acc { get { return _acc; } }
     //Добавление персонажа
     void AddAcc()
     {
@@ -16,27 +13,32 @@ public class AccChose
     //Удаление персонажа
     void DelAcc()
     {
-        Console.Write("Какого персонажа хотите удалить: ");
-        int index = Convert.ToInt32(Console.ReadLine());
-        if (index >= 0 && index < _acc.Count)
-            _acc.RemoveAt(index);
+        while (true)
+        {
+            Console.Write("Какого персонажа хотите удалить: ");
+            int index = Convert.ToInt32(Console.ReadLine());
+            if (index >= 0 && index < _acc.Count) 
+            {_acc.RemoveAt(index); return; }
+            else Console.WriteLine("Неверный индекс персонажа, попробуйте ещё раз");
+        }
     }
     //Выбор персонажа
     Person GetAcc()
     {
-        Console.Write("Введите индекс персонажа: ");
-        int index = Convert.ToInt32(Console.ReadLine());
-        if (index >= 0 && index < _acc.Count)
-            return _acc[index];
-        return null;
+        while (true)
+        {
+            Console.Write("Введите индекс персонажа: ");
+            int index = Convert.ToInt32(Console.ReadLine());
+            if (index >= 0 && index < _acc.Count) 
+                return _acc[index];
+            else Console.WriteLine("Неверный индекс персонажа, попробуйте ещё раз");
+        }
     }
     //Вывод информации
     void Info()
     {
-        for(int i = 0; i < _acc.Count; i++)
-        {
-            Console.WriteLine($"Индекс счета: {i}, Имя: {_acc[i].Name}");
-        }
+        for(int i = 0; i < _acc.Count; i++) 
+            Console.WriteLine($"Индекс персонажа: {i}, Имя: {_acc[i].Name}");
     }
     //Интефейс управления персонажами
     public Person AccMenu()
@@ -66,15 +68,15 @@ public class AccChose
 
     void Test()
     {
-        Person a = new Person("GG", 90, 0,0, true, 50, 20);
-        Person b = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person c = new Person("Fren", 100, 0, 5, true, 20,0);
-        Person s = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person t = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person j = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person n = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person v = new Person("Enem", 100, 0, 5, false, 40,0);
-        Person p = new Person("Enem", 100, 0, 5, false, 40,0);
+        Person a = new Person("GG", 90, 0,0, true, 50, 20, true);
+        Person b = new Person("Enem", 100, 0, 5, false, 40,0, true);
+        Person c = new Person("Fren", 100, 0, 5, true, 20,0,true);
+        Person s = new Person("Enem", 100, 0, 5, false, 40,0,false);
+        Person t = new Person("Enem", 100, 0, 5, false, 40,0,false);
+        Person j = new Person("Enem", 100, 0, 5, false, 40,0,true);
+        Person n = new Person("Enem", 100, 0, 5, false, 40,0, false);
+        Person v = new Person("Enem", 100, 0, 5, false, 40,0, true);
+        Person p = new Person("Enem", 100, 0, 5, false, 40,0, true);
         _acc.Add(a);
         _acc.Add(b);
         _acc.Add(c);

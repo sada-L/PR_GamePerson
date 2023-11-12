@@ -10,13 +10,9 @@ public class Person
     private bool _life = true;
     private int _damage;
     private int _wins;
-    
-    public string Name
-    {
-        get { return _name; }
-    }
+    public string Name { get { return _name; } }
     //Ввод данных
-    public Person(string name, int healthMax, int coorX, int coorY, bool camp, int damage, int wins)
+    public Person(string name, int healthMax, int coorX, int coorY, bool camp, int damage, int wins, bool life)
     {
         _name = name;
         _healthMax = healthMax;
@@ -26,19 +22,16 @@ public class Person
         _camp = camp;
         _damage = damage;
         _wins = wins;
+        _life = life;
     }
-    public Person()
-    {
-        Info();
-    }
+    public Person() => Info(); 
     void Info()
     {
         Console.Write($"Введите имя, лагерь(+/-), максимальное здоровье, местоположение(две координаты)\n" + $">");
         string[] s = Console.ReadLine().Split();
-        if(s[1] == "+") 
-        { _camp = true; }
-        else
-        { _camp = false; }
+        if (s[1] == "+") 
+            _camp = true; 
+        else _camp = false; 
         _name = s[0];
         _healthMax = Int32.Parse(s[2]);
         _health = _healthMax;
@@ -63,11 +56,10 @@ public class Person
     //Перемещение
     void Move(List<Person> persons)
     {
-        if (_life == false) 
-            return;
         Console.WriteLine("Идти: | A | V | < | > |");
         while (true)
-        {
+        { 
+            if (_life == false) return;
             ConsoleKeyInfo c = Console.ReadKey();
             switch (c.Key)
             {
@@ -79,26 +71,16 @@ public class Person
             }
             Console.WriteLine($"{_coor[0]},{_coor[1]}");
             foreach (Person p in persons)
-            {
-                if (_coor[0] == p._coor[0] &&
-                    _coor[1] == p._coor[1])
-                {
+                if (_coor[0] == p._coor[0] && _coor[1] == p._coor[1])
                     if (p._life == true)
-                    {
                         if (_camp != p._camp)
-                        {
                             FightIn(persons);
-                        }
-                    }
-                }
-            }
         }   
     }
     //Интер битвы
     void FightIn(List<Person> persons)
     {
-        if(_life == false)
-            return;
+        if (_life == false) return;
         Console.Write
         ("УВАГА!!!\n" +
          "На вашем пути враги, что будете делать:\n" +
@@ -120,135 +102,81 @@ public class Person
         List<Person> persFildFren = new List<Person>();
         List<Person> persFildEnem = new List<Person>();
         foreach (Person p in persons)
-        {
-            if (_coor[0] == p._coor[0] &&
-                _coor[1] == p._coor[1])
-            {
-                if (p._life == true)
-                {
-                    if (_camp != p._camp)
-                    {
+            if (_coor[0] == p._coor[0] && _coor[1] == p._coor[1])
+                if (p._life == true) 
+                    if (_camp != p._camp) 
                         persFildEnem.Add(p);
-                    }
-                    else
-                    {
+                    else 
                         persFildFren.Add(p);
-                    }
-                }
-            }
-        }
         //перечисление учасников битвы
         Console.WriteLine("Ваша команда:");
-        foreach (Person p in persFildFren)
-        {
-            p.Print();
-        }
+        foreach (Person p in persFildFren) 
+            p.Print(); 
         Console.WriteLine("Команда противника:");
-        foreach (Person p in persFildEnem)
-        {
+        foreach (Person p in persFildEnem) 
             p.Print();
-        }
         Console.WriteLine("Нажмите Enter, чтобы продолжить...");
         Console.ReadLine();
         while (true)
-        { 
+        {
             //создание переменных урона
            int FrenDam = 0;
            int EnemDam = 0;
            //суммирование урона живых членов команд
-           foreach (Person p in persFildFren)
-           {
-                FrenDam += p._damage;
-           }
-           foreach (Person p in persFildEnem)
-           {
-                EnemDam += p._damage;
-           } 
-           //деление суммарного урона на количество членов
+           foreach (Person p in persFildFren) 
+               FrenDam += p._damage; 
+           foreach (Person p in persFildEnem) 
+               EnemDam += p._damage;
+           //деление суммарного урона на количество противников 
            FrenDam /= persFildEnem.Count;
            EnemDam /= persFildFren.Count;
            //нанесение урона 
            foreach (Person p in persFildFren)
            {
                p._health -= EnemDam;
-               if (p._health <= 0)
-               {
+               if (p._health <= 0) 
                    p._life = false;
-               }
            } 
            foreach (Person p in persFildEnem)
            {
                p._health -= FrenDam;
-               if (p._health <= 0)
-               {
+               if (p._health <= 0) 
                    p._life = false;
-               }
            }
            //проверка жив ли гг 
            if (_life == false)
-           {
-               Console.WriteLine("Вы умерли");
-               return;
-           }
+           { Console.WriteLine("Вы умерли"); return; }
            Console.WriteLine("\nВы смогли отбросить врага и нашли момент восстановить силы.");
            //проверка ОЗ
-           Console.WriteLine(
-               "-------------------------------\n" +
-               "ОЗ вашей команды: \n" +
-               "-------------------------------");
+           Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: \n" + "-------------------------------");
            foreach (Person p in persFildFren)
-           {
-               if (p._life == true)
-               {
+               if (p._life == true) 
                    Console.WriteLine($"Имя: {p._name}, ОЗ: {p._health}, урона получено: {EnemDam}");
-               }
-           }
-           Console.WriteLine(
-               "-------------------------------\n" +
-               "ОЗ ваших врагов: \n" +
-               "-------------------------------");
-           foreach (Person p in persFildEnem)
-           {
-               if (p._life == true)
-               {
+           Console.WriteLine("-------------------------------\n" + "ОЗ ваших врагов: \n" + "-------------------------------");
+           foreach (Person p in persFildEnem) 
+               if (p._life == true) 
                    Console.WriteLine($"Имя: {p._name}, ОЗ: {p._health}, урона получено: {FrenDam}");
-               }
-           }
            //лечение союзников 
            while (true)
            {  
-               Console.Write("-------------------------------\n" +
-                             "Хотите вылечить союзника: +/-\n" + ">");
+               Console.Write("-------------------------------\n" + "Хотите вылечить союзника: +/-\n" + ">");
                if (Console.ReadLine() == "+")
                {
                    Console.Write("Выберете кого будете лечить:\n" + ">");
                    string srh = Console.ReadLine();
                    foreach (Person p in persFildFren)
-                   {
-                       if (srh == p._name)
-                       {
+                       if (srh == p._name) 
                            Doc(p);
-                       }
-                   }
                }
-               else
-               {
-                   break;
-               }
+               else break;
            }
            //лечение гг
-           Console.Write("-------------------------------\n" +
-                         "Хотите вылечить себя: +/-\n" + ">");
-           if (Console.ReadLine() == "+")
-           {
+           Console.Write("-------------------------------\n" + "Хотите вылечить себя: +/-\n" + ">");
+           if (Console.ReadLine() == "+") 
                Vost();
-           }
            //проверка кто победил 
            if (persFildEnem.Count(person => person._life == true) == 0)
-           {
-               Console.WriteLine("Побида!!!");
-               return;
-           }
+           { Console.WriteLine("Побида!!!"); return; }
            Console.WriteLine("Битва продолжается...");
         }
     }
@@ -257,23 +185,15 @@ public class Person
     {
         if (_wins >= 10)
         {
-            foreach (Person p in persons)
-            {
-                if (_coor[0] == p._coor[0] &&
-                    _coor[1] == p._coor[1])
-                {
-                    if (_camp != p._camp)
-                    {
+            foreach (Person p in persons) 
+                if (_coor[0] == p._coor[0] && _coor[1] == p._coor[1]) 
+                    if (_camp != p._camp) 
                         p._life = false;
-                    }
-                }
-            }
             Console.WriteLine("Все враги уничтожены");
         }
         else
         {
-            Console.WriteLine("Для ульты необходимо хотя бы 10 побед.\n" +
-                              "Битва неизбежна");
+            Console.WriteLine("Для ульты необходимо хотя бы 10 побед.\n" + "Битва неизбежна");
             Fight(persons);
         }
     }
@@ -284,25 +204,15 @@ public class Person
         {
             Console.Write("Сколько восстановить оз:\n" + ">");
             int hp = Convert.ToInt32(Console.ReadLine());
-            if (hp < _health)
-            {
+            if (hp < _health) 
                 if (hp < p._healthMax)
                 {
                     p._health += hp;
                     _health -= hp;
                     break;
                 }
-                else
-                {
-                    Console.WriteLine("Нельзя лечить больше максимального ОЗ");
-                }
-            }
-            else
-            {
-                Console.WriteLine
-                ("Вы у мамы один, а товарищей много.\n" +
-                 "Нельзя тратить здоровья больше чем имеется");
-            }
+                else Console.WriteLine("Нельзя лечить больше максимального ОЗ");
+            else Console.WriteLine("Вы у мамы один, а товарищей много.\n" + "Нельзя тратить здоровья больше чем имеется");
         }
     }
     //Полное восстановление 
@@ -313,23 +223,13 @@ public class Person
             _health = _healthMax;
             _wins -= 5;
         }
-        else
-        {
-            Console.WriteLine("Победи в 5 битвах, чтобы восстановить ОЗ");
-        }
+        else Console.WriteLine("Победи в 5 битвах, чтобы восстановить ОЗ");
     }
-    
     //Пользовательский интерфейс 
     public void Menu(List<Person> persons)
     {
-        if (_life == false)
-        {
-            Console.WriteLine("Персонаж мертв, нажмите Enter для выхода");
-            Console.ReadLine();
-            return;
-        }
-        else
-        {
+        while (true)
+        {   
             if (_life == false)
             {
                 Console.WriteLine("Персонаж мертв, нажмите Enter для выхода");
@@ -338,40 +238,22 @@ public class Person
             }
             else
             {
-                while (true)
-                {   
-                    if (_life == false)
-                    {
-                        Console.WriteLine("Персонаж мертв, нажмите Enter для выхода");
-                        Console.ReadLine();
-                        return;
-                    }
-                    else
-                    {
-                        Console.Write
-                        ("--------------------------------\n" +
-                         "Выберете необходимое действие:\n" +
-                         "1. Показать данные персонажа\n" +
-                         "2. Передвижение\n" +
-                         "3. Лечение\n" +
-                         "4. Выход\n" +
-                         ">");
-                        switch (Convert.ToInt32(Console.ReadLine()))
-                        {
-                            case 1:
-                                Print();
-                                break;
-                            case 2:
-                                Move(persons);
-                                break;
-                            case 3:
-                                Vost();
-                                break;
-                            case 4: return;
-                        }
-                    }
-                } 
+                Console.Write
+                ("--------------------------------\n" +
+                 "Выберете необходимое действие:\n" +
+                 "1. Показать данные персонажа\n" +
+                 "2. Передвижение\n" +
+                 "3. Лечение\n" +
+                 "4. Выход\n" +
+                 ">");
+                switch (Convert.ToInt32(Console.ReadLine()))
+                {
+                    case 1: Print(); break;
+                    case 2: Move(persons); break;
+                    case 3: Vost(); break;
+                    case 4: return;
+                }
             }
-        }
+        } 
     }
 }
