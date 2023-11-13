@@ -11,6 +11,12 @@ public class Person
     private int _damage;
     private int _wins;
     public string Name { get { return _name; } }
+    public int CoorX { get { return _coor[0]; } }
+    public int CootY { get { return _coor[1]; } }
+    public bool Camp { get { return _camp; } }
+    public int Health { get { return _health; } }
+    public bool Life { get { return _life; } }
+    
     //Ввод данных
     public Person(string name, int healthMax, int coorX, int coorY, bool camp, int damage, int wins, bool life)
     {
@@ -24,15 +30,18 @@ public class Person
         _wins = wins;
         _life = life;
     }
-    public Person() => Info(); 
-    void Info()
+    public Person(List<Person> persons) => Info(persons); 
+    void Info(List<Person> persons)
     {
         Console.Write($"Введите имя, лагерь(+/-), максимальное здоровье, местоположение(две координаты)\n" + $">");
         string[] s = Console.ReadLine().Split();
         if (s[1] == "+") 
             _camp = true; 
-        else _camp = false; 
-        _name = s[0];
+        else _camp = false;
+        foreach (Person p in persons)
+            if(s[0] == p._name)
+                Console.WriteLine("Такой персонаж уже существует");
+            else _name = s[0];
         _healthMax = Int32.Parse(s[2]);
         _health = _healthMax;
         _coor[0] = Int32.Parse(s[3]);
@@ -56,9 +65,9 @@ public class Person
     //Перемещение
     void Move(List<Person> persons)
     {
-        Console.WriteLine("Идти: | A | V | < | > |");
         while (true)
-        { 
+        {
+            Console.WriteLine("Идти: | A | V | < | > |");
             if (_life == false) return;
             ConsoleKeyInfo c = Console.ReadKey();
             switch (c.Key)
@@ -172,16 +181,7 @@ public class Person
                {
                    case 1: break;
                    case 2: Vost(); break;
-                   case 3: 
-                       while (true)
-                       {  
-                           Console.Write("Выберете кого будете лечить:\n" + ">");
-                           string srh = Console.ReadLine();
-                           foreach (Person p in persFildFren)
-                               if (srh == p._name) 
-                                   Doc(p);
-                           break;
-                       } break;
+                   case 3: Doc(persons); break;
                    case 4: Del(persFildEnem); break;
                    case 5: return;
                } break;
@@ -215,21 +215,30 @@ public class Person
         }
     }
     //Лечение
-    void Doc(Person p)
+    void Doc(List<Person> persons)
     {
         while (true)
         {
-            Console.Write("Сколько восстановить оз:\n" + ">");
-            int hp = Convert.ToInt32(Console.ReadLine());
-            if (hp < _health) 
-                if (hp < p._healthMax)
+            Console.Write("Выберете кого будете лечить:\n" + ">");
+            string srh = Console.ReadLine();
+            foreach (Person p in persons)
+            {
+                if (srh == p._name)
                 {
-                    p._health += hp;
-                    _health -= hp;
-                    break;
+                    Console.Write("Сколько восстановить оз:\n" + ">");
+                    int hp = Convert.ToInt32(Console.ReadLine());
+                    if (hp < _health) 
+                        if (hp < p._healthMax)
+                        {
+                            p._health += hp;
+                            _health -= hp;
+                            break;
+                        }
+                        else Console.WriteLine("Нельзя лечить больше максимального ОЗ");
+                    else Console.WriteLine("Вы у мамы один, а товарищей много.\n" + "Нельзя тратить здоровья больше чем имеется");
                 }
-                else Console.WriteLine("Нельзя лечить больше максимального ОЗ");
-            else Console.WriteLine("Вы у мамы один, а товарищей много.\n" + "Нельзя тратить здоровья больше чем имеется");
+            }
+            break;
         }
     }
     //Полное восстановление 
@@ -246,6 +255,11 @@ public class Person
     //Пользовательский интерфейс 
     public void Menu(List<Person> persons)
     {
+        foreach (Person p in persons)
+            if (_coor[0] == p._coor[0] && _coor[1] == p._coor[1])
+                if (p._life == true)
+                    if (_camp != p._camp)
+                        FightIn(persons);
         while (true)
         {   
             if (_life == false)
@@ -261,15 +275,17 @@ public class Person
                  "Выберете необходимое действие:\n" +
                  "1. Показать данные персонажа\n" +
                  "2. Передвижение\n" +
-                 "3. Лечение\n" +
-                 "4. Выход\n" +
+                 "3. Восстановить ОЗ\n" +
+                 "4. Лечить союзников\n" +
+                 "5. Выход\n" +
                  ">");
                 switch (Convert.ToInt32(Console.ReadLine()))
                 {
                     case 1: Print(); break;
                     case 2: Move(persons); break;
                     case 3: Vost(); break;
-                    case 4: return;
+                    case 4: Doc(persons); break;
+                    case 5: return; 
                 }
             }
         } 
