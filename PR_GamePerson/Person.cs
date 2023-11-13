@@ -65,10 +65,12 @@ public class Person
     //Перемещение
     void Move(List<Person> persons)
     {
+        Console.WriteLine("Идти: | A | V | < | > |");
         while (true)
         {
-            Console.WriteLine("Идти: | A | V | < | > |");
             if (_life == false) return;
+            if(persons.Count(person => person._life == true && person._camp == false) == 0) return;
+            if(persons.Count(person => person._life == true && person._camp == true) == 0) return;
             ConsoleKeyInfo c = Console.ReadKey();
             switch (c.Key)
             {
@@ -90,6 +92,8 @@ public class Person
     void FightIn(List<Person> persons)
     {
         if (_life == false) return;
+        if(persons.Count(person => person._life == true && person._camp == false) == 0) return;
+        if(persons.Count(person => person._life == true && person._camp == true) == 0) return;
         Console.Write
         ("---------------| УВАГА |---------------\n" +
          "На вашем пути враги, что будете делать:\n" +
@@ -155,6 +159,8 @@ public class Person
            //проверка жив ли гг 
            if (_life == false)
            { Console.WriteLine("\n------------| Вы умерли |------------\n"); return; }
+           if(persons.Count(person => person._life == true && person._camp == false) == 0) return;
+           if(persons.Count(person => person._life == true && person._camp == true) == 0) return;
            Console.WriteLine("\n----| Вы смогли отбросить врага и нашли момент восстановить силы. |----\n");
            //проверка ОЗ
            Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: ");
@@ -261,33 +267,40 @@ public class Person
                     if (_camp != p._camp)
                         FightIn(persons);
         while (true)
-        {   
-            if (_life == false)
-            {
-                Console.WriteLine("Персонаж мертв, нажмите Enter для выхода");
-                Console.ReadLine();
-                return;
-            }
+        {
+            if(persons.Count(person => person._life == true && person._camp == false) == 0)
+            { Console.WriteLine("\n--------------| Победа, врагов не осталось |--------------\n"); return;}
+            else if (persons.Count(person => person._life == true && person._camp == true) == 0)
+            {  Console.WriteLine("\n--------------| Поражение, союзников не осталось |--------------\n"); return;}
             else
             {
-                Console.Write
-                ("--------------------------------\n" +
-                 "Выберете необходимое действие:\n" +
-                 "1. Показать данные персонажа\n" +
-                 "2. Передвижение\n" +
-                 "3. Восстановить ОЗ\n" +
-                 "4. Лечить союзников\n" +
-                 "5. Выход\n" +
-                 ">");
-                switch (Convert.ToInt32(Console.ReadLine()))
+                if (_life == false)
                 {
-                    case 1: Print(); break;
-                    case 2: Move(persons); break;
-                    case 3: Vost(); break;
-                    case 4: Doc(persons); break;
-                    case 5: return; 
+                    Console.WriteLine("Персонаж мертв, нажмите Enter для выхода");
+                    Console.ReadLine();
+                    return;
+                }
+                else
+                {
+                    Console.Write
+                    ("--------------------------------\n" +
+                     "Выберете необходимое действие:\n" +
+                     "1. Показать данные персонажа\n" +
+                     "2. Передвижение\n" +
+                     "3. Восстановить ОЗ\n" +
+                     "4. Лечить союзников\n" +
+                     "5. Выход\n" +
+                     ">");
+                    switch (Convert.ToInt32(Console.ReadLine()))
+                    {
+                        case 1: Print(); break;
+                        case 2: Move(persons); break;
+                        case 3: Vost(); break;
+                        case 4: Doc(persons); break;
+                        case 5: return;
+                    }
                 }
             }
-        } 
+        }
     }
 }
