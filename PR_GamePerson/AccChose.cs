@@ -68,16 +68,25 @@ public class AccChose
 
     void Test()
     {
-        Person a = new Person("GG", 90, 0,0, true, 50, 20, true);
-        Person b = new Person("Enem", 100, 0, 5, false, 40,0, true);
-        Person c = new Person("Fren", 100, 0, 5, true, 20,0,true);
-        Person s = new Person("Enem", 100, 0, 5, false, 40,0,false);
-        Person t = new Person("Enem", 100, 0, 5, false, 40,0,false);
-        Person j = new Person("Enem", 100, 0, 5, false, 40,0,true);
-        Person n = new Person("Enem", 100, 0, 5, false, 40,0, false);
-        Person v = new Person("Enem", 100, 0, 5, false, 40,0, true);
-        Person p = new Person("Enem", 100, 0, 5, false, 40,0, true);
-        _acc.Add(a); _acc.Add(b); _acc.Add(c); _acc.Add(s); _acc.Add(t); _acc.Add(j); _acc.Add(n); _acc.Add(v); _acc.Add(p);
+        Person a = new Person("GG", 200, 0,0, true, 60, 0, true);
+        _acc.Add(a);
+        Random random = new Random();
+        for (int i = 0; i < 30; i++)
+        {
+            int h = random.Next(50, 200);
+            int cX = random.Next(-10, 10);
+            int cY = random.Next(-10, 10);
+            int d = random.Next(50);
+            _acc.Add(new Person("enem", h,cX,cY,false,d,0,true));
+        }
+        for (int i = 0; i < 30; i++)
+        {
+            int h = random.Next(50, 200);
+            int cX = random.Next(-10, 10);
+            int cY = random.Next(-10, 10);
+            int d = random.Next(100);
+            _acc.Add(new Person("fren", h,cX,cY,true,d,0,true));
+        }
         Console.WriteLine("Персонаж добавлен");
     }
 }

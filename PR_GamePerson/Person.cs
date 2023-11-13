@@ -82,7 +82,7 @@ public class Person
     {
         if (_life == false) return;
         Console.Write
-        ("УВАГА!!!\n" +
+        ("---------------| УВАГА |---------------\n" +
          "На вашем пути враги, что будете делать:\n" +
          "1. Сражаться\n" +
          "2. Бежать\n" +
@@ -146,44 +146,57 @@ public class Person
            //проверка жив ли гг 
            if (_life == false)
            { Console.WriteLine("\n------------| Вы умерли |------------\n"); return; }
-           Console.WriteLine("\nВы смогли отбросить врага и нашли момент восстановить силы.");
+           Console.WriteLine("\n----| Вы смогли отбросить врага и нашли момент восстановить силы. |----\n");
            //проверка ОЗ
-           Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: \n" + "-------------------------------");
+           Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: ");
            foreach (Person p in persFildFren)
                if (p._life == true) 
                    Console.WriteLine($"Имя: {p._name}, ОЗ: {p._health}, урона получено: {EnemDam}");
-           Console.WriteLine("-------------------------------\n" + "ОЗ ваших врагов: \n" + "-------------------------------");
+           Console.WriteLine("\n-------------------------------\n" + "ОЗ ваших врагов: ");
            foreach (Person p in persFildEnem) 
                if (p._life == true) 
                    Console.WriteLine($"Имя: {p._name}, ОЗ: {p._health}, урона получено: {FrenDam}");
-           //лечение союзников 
+           //выбор дествий в бою
            while (true)
-           {  
-               Console.Write("-------------------------------\n" + "Хотите вылечить союзника: +/-\n" + ">");
-               if (Console.ReadLine() == "+")
+           {
+               Console.Write
+               ("\n--------------------\n" +
+                "Что будете делать?\n" +
+                "1. Сражаться дальше\n" +
+                "2. Восстановить ОЗ\n" +
+                "3. Лечить союзников\n" +
+                "4. Ульта\n" +
+                "5. Бежать\n" +
+                ">");
+               switch (Convert.ToInt32(Console.ReadLine()))
                {
-                   Console.Write("Выберете кого будете лечить:\n" + ">");
-                   string srh = Console.ReadLine();
-                   foreach (Person p in persFildFren)
-                       if (srh == p._name) 
-                           Doc(p);
-               }
-               else break;
+                   case 1: break;
+                   case 2: Vost(); break;
+                   case 3: 
+                       while (true)
+                       {  
+                           Console.Write("Выберете кого будете лечить:\n" + ">");
+                           string srh = Console.ReadLine();
+                           foreach (Person p in persFildFren)
+                               if (srh == p._name) 
+                                   Doc(p);
+                           break;
+                       } break;
+                   case 4: Del(persFildEnem); break;
+                   case 5: return;
+               } break;
            }
-           //лечение гг
-           Console.Write("-------------------------------\n" + "Хотите вылечить себя: +/-\n" + ">");
-           if (Console.ReadLine() == "+") 
-               Vost();
            //проверка кто победил 
            if (persFildEnem.Count(person => person._life == true) == 0)
            {
-               Console.WriteLine("Побида!!!");
+               Console.WriteLine("------------| ПОБЕДА |------------\n" + "Идти: | A | V | < | > |");
                _wins += 1;
                return;
            }
            Console.WriteLine("Битва продолжается...");
         }
     }
+    
     //Уничтожение 
     void Del(List<Person> persons)
     {
