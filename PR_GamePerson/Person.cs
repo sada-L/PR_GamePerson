@@ -17,6 +17,7 @@ public class Person
     public int Health { get { return _health; } }
     public bool Life { get { return _life; } }
     
+    
     //Ввод данных
     public Person(string name, int healthMax, int coorX, int coorY, bool camp, int damage, int wins, bool life)
     {
@@ -37,11 +38,8 @@ public class Person
         string[] s = Console.ReadLine().Split();
         if (s[1] == "+") 
             _camp = true; 
-        else _camp = false;
-        foreach (Person p in persons)
-            if(s[0] == p._name)
-                Console.WriteLine("Такой персонаж уже существует");
-            else _name = s[0];
+        else _camp = false; 
+        _name = s[0];
         _healthMax = Int32.Parse(s[2]);
         _health = _healthMax;
         _coor[0] = Int32.Parse(s[3]);
@@ -159,8 +157,8 @@ public class Person
            //проверка жив ли гг 
            if (_life == false)
            { Console.WriteLine("\n------------| Вы умерли |------------\n"); return; }
-           if(persons.Count(person => person._life == true && person._camp == false) == 0) return;
-           if(persons.Count(person => person._life == true && person._camp == true) == 0) return;
+           if(persons.Count(person => person._life == true && person._camp == _camp) == 0) return;
+           if(persons.Count(person => person._life == true && person._camp != _camp) == 0) return;
            Console.WriteLine("\n----| Вы смогли отбросить врага и нашли момент восстановить силы. |----\n");
            //проверка ОЗ
            Console.WriteLine("-------------------------------\n" + "ОЗ вашей команды: ");
@@ -231,17 +229,23 @@ public class Person
             {
                 if (srh == p._name)
                 {
-                    Console.Write("Сколько восстановить оз:\n" + ">");
-                    int hp = Convert.ToInt32(Console.ReadLine());
-                    if (hp < _health) 
-                        if (hp < p._healthMax)
+                    if (p._camp == _camp)
+                    {
+                        Console.Write("Сколько восстановить оз:\n" + ">");
+                        int hp = Convert.ToInt32(Console.ReadLine());
+                        if (hp < _health)
                         {
-                            p._health += hp;
-                            _health -= hp;
-                            break;
+                            if (hp < p._healthMax)
+                            {
+                                p._health += hp;
+                                _health -= hp;
+                                break;
+                            }
+                            else Console.WriteLine("Нельзя лечить больше максимального ОЗ");
                         }
-                        else Console.WriteLine("Нельзя лечить больше максимального ОЗ");
-                    else Console.WriteLine("Вы у мамы один, а товарищей много.\n" + "Нельзя тратить здоровья больше чем имеется");
+                        else Console.WriteLine("Вы у мамы один, а товарищей много.\n" + "Нельзя тратить здоровья больше чем имеется");
+                    } 
+                    else Console.WriteLine("Врагов лечить нельзя");
                 }
             }
             break;
@@ -268,9 +272,11 @@ public class Person
                         FightIn(persons);
         while (true)
         {
-            if(persons.Count(person => person._life == true && person._camp == false) == 0)
+            if (persons.Count(person => person._life == true && person._camp != _camp) == 0 && persons.Count(person => person._life == true && person._camp == _camp) == 0)
+            { Console.WriteLine("\n--------------| Ничья |--------------\n"); return; }
+            else if(persons.Count(person => person._life == true && person._camp != _camp) == 0)
             { Console.WriteLine("\n--------------| Победа, врагов не осталось |--------------\n"); return;}
-            else if (persons.Count(person => person._life == true && person._camp == true) == 0)
+            else if (persons.Count(person => person._life == true && person._camp == _camp) == 0)
             {  Console.WriteLine("\n--------------| Поражение, союзников не осталось |--------------\n"); return;}
             else
             {
